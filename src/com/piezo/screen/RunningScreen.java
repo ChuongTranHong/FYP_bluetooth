@@ -64,6 +64,7 @@ public class RunningScreen extends GameScreen {
 	Stage ui;
 	byte currentPosition = 0;
 	int swordX = 50;
+
 	public static VoltageDiagram voltageDiagram;
 	byte index;
 	boolean getAcceleration = false;
@@ -234,7 +235,7 @@ public class RunningScreen extends GameScreen {
 
 		ui.draw();
 		for (index = 0; index < objectList.size(); index++) {
-			if (objectList.get(index).isDead()) {
+			if (objectList.get(index).isDead() && objectList.get(index).finishAnimation) {
 				CuttingObject object = objectList.get(index);
 
 				CuttingObject newObject = PoolStore.poolArray.get(
@@ -384,12 +385,13 @@ public class RunningScreen extends GameScreen {
 		if (Gdx.input.justTouched()) {
 //			int x = Gdx.input.getX();
 			Command command = PoolStore.commandPool.obtain();
-			command.currentCommand= Command.NORMAL_SHORT_FORCE;
+//			command.currentCommand= Command.NORMAL_SHORT_FORCE;
 			if (Gdx.input.getX() > screenWidth / 2) {
-				
+				command.currentCommand= Command.STRONG_SHORT_FORCE;
 				command.left = false;
 				commandRight(command);
 			} else {
+				command.currentCommand= Command.NORMAL_SHORT_FORCE;
 				command.left = true;
 				commandLeft(command);
 			}

@@ -53,7 +53,7 @@ public class Apple extends CuttingObject {
 	@Override
 	public boolean takeCut(byte typeCut,boolean left) {
 		// TODO Auto-generated method stub
-		if(currentLife<=0) return false;
+		if(currentLife<=0) return true;
 		if(typeCut== Command.NOCOMMAND || typeCut==Command.UNDETERMINED)return false;
 		TextOutput temp = PoolStore.textPool.obtain();
 		temp.x=0;
