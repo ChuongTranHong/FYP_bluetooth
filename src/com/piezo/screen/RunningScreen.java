@@ -254,7 +254,7 @@ public class RunningScreen extends GameScreen {
 		if (!running) {
 //			PoolStore.runningScreen=this;
 			this.dispose();
-			game.setScreen(new GameOverScreen(game));
+			game.setScreen(new GameOverScreen(game, score));
 		}
 	}
 

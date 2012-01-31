@@ -29,7 +29,7 @@ public class GameOverScreen extends GameScreen {
 	SpriteBatch spriteBatch;
 	TextureRegion backgoundTexture;
 
-	public GameOverScreen(final PiezoGame game) {
+	public GameOverScreen(final PiezoGame game, int score) {
 		this.game = game;
 		screenHeight = Gdx.graphics.getHeight();
 		screenWidth = Gdx.graphics.getWidth();
@@ -39,8 +39,12 @@ public class GameOverScreen extends GameScreen {
 		Gdx.input.setInputProcessor(ui);
 		Label label = new Label("Game Over", skin.getStyle(LabelStyle.class),
 				"label");
-		label.x = screenWidth / 2;
-		label.y = screenHeight / 2 + 30;
+		label.x = screenWidth / 2-30;
+		label.y = screenHeight / 2 + 150;
+		Label scoreText=new Label("Score "+score,skin.getStyle(LabelStyle.class),
+				"score");
+		scoreText.x= screenWidth / 2 - 30;
+		scoreText.y= screenHeight /2 + 100;
 		backgoundTexture = new TextureRegion(new Texture(
 				Gdx.files.internal("data/gameoverbackground.jpg")));
 		Texture replay = new Texture(
@@ -76,6 +80,7 @@ public class GameOverScreen extends GameScreen {
 		});
 
 		ui.addActor(label);
+		ui.addActor(scoreText);
 		ui.addActor(replayButton);
 		ui.addActor(quitButton);
 		spriteBatch = new SpriteBatch();
