@@ -7,6 +7,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.piezo.screen.ConfigurationScreen;
 import com.piezo.screen.GameOverScreen;
+import com.piezo.screen.HelpScreen;
 import com.piezo.screen.MainMenu;
 import com.piezo.screen.RunningScreen;
 
@@ -31,7 +32,7 @@ public class PiezoGame implements ApplicationListener{
 			music.setVolume(0.5f);
 			music.setLooping(true);
 //			music.play();
-			setScreen(new MainMenu(this));
+			setScreen(new HelpScreen(this));
 //			setScreen(new TestDiagram(this));
 		}
 		

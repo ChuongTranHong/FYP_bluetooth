@@ -1,0 +1,31 @@
+		How to play
+		
+Game controller supports two types of input:
+strong and soft movement. User moves the hand 
+left or right to control the game. In case many 
+command in the same direction, it requires a short
+stop between two consecutive movement. If they
+are different in direction, the stop will not
+need. 
+  
+The hand's movement will command the movement 
+of the sword in the screen. When the sword
+moves, it cut the object in its way according
+to the input type.
+
+ Each object support different type of cut
+ 
+- Apple support both type of cut. But the strong
+ cut will take more damage than the soft cut. 
+ 
+- Egg only support the soft cut. User can only
+ use wrong cut three times. If it is excess
+  the limit, the egg will be broken.
+  
+- The bomb doesn't support any type of cut.
+If user accidently cut it, the game is over.
+
+Each object has their timer. If the timer is run 
+out, it will be replaced by the new one. 
+If user kill the object before its timer reaches
+zero, the bonus point will add to the score. 

@@ -79,6 +79,14 @@ public class MainMenu extends GameScreen {
 				game.setScreen(new ConfigurationScreen(game));
 			}
 		});
+	    helpMenu.setClickListener(new ClickListener() {
+			
+			@Override
+			public void click(Actor actor, float x, float y) {
+				// TODO Auto-generated method stub
+				game.setScreen(new HelpScreen(game));
+			}
+		});
 
 	    newGame.setClickListener(new ClickListener() {
 
