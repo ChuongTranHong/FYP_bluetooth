@@ -69,6 +69,8 @@ public class MainMenu extends GameScreen {
 	    
 	    Label fps = new Label("fps: ",skin.getStyle(LabelStyle.class),"fps");
 	    Label title = new Label("SAMURAI FRUIT",skin.getStyle(LabelStyle.class),"title");
+	    title.scaleX=5;
+	    title.scaleY=5;
 	    Button newGame = new TextButton("New game",skin.getStyle(TextButtonStyle.class),"new");
 	    Button optionMenu = new TextButton("option",skin.getStyle(TextButtonStyle.class),"Options");
 	    Button helpMenu = new TextButton("help",skin.getStyle(TextButtonStyle.class),"Help");
@@ -98,11 +100,12 @@ public class MainMenu extends GameScreen {
 			}
 	    });
 
-	    window.row().fill(false,false).expand(true,false).padTop(10).padBottom(20);
+	    window.row().fill(false,false).expand(true,false).padTop(50).padBottom(20);
 	    window.add(title);
-	    
+	    window.row().fill(true, true).minHeight(100);
+//	    window.row().fill(true, true).expand(true, true).pad(10, 0, 10, 0);
 	    Table container = new Table("menu");
-	    container.row().fill(true, true).expand(true, true).pad(10, 0, 10, 0);
+	    container.row().fill(true, true).expand(true, true).pad(100, 0, 10, 0);
 	    container.add(newGame);
 	    container.row().fill(true, true).expand(true, true).pad(10, 0, 10, 0);
 	    container.add(optionMenu);
