@@ -51,7 +51,7 @@ public class HelpScreen extends GameScreen{
 //		scrollPane2.
 		scrollPane2.x = 50;
 		scrollPane2.y = 100;
-		scrollPane2.width= ui.width()-50;
+		scrollPane2.width= ui.width()-80;
 		scrollPane2.height=ui.height()-100;
 		Button backButton = new TextButton("Back",
 				skin.getStyle(TextButtonStyle.class), "back");
