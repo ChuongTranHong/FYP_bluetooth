@@ -34,7 +34,7 @@ public class PiezoGame implements ApplicationListener{
 			music.setLooping(true);
 //			music.play();
 			setScreen(new MainMenu(this));
-//			setScreen(new TestDiagram(this));
+
 		}
 		
 	}

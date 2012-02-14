@@ -3,6 +3,7 @@ package com.piezo.util;
 import android.graphics.Color;
 import android.os.Message;
 
+import com.piezo.screen.RunningScreen;
 import com.piezo.util.BufferData;
 import com.piezo.util.Data;
 import ioio.lib.api.AnalogInput;
@@ -65,6 +66,7 @@ public class IOIOThreadExt extends IOIOThread{
 			throw e;
 		}*/
 		try {
+			RunningScreen.piezoSignal=true;
 			System.out.println("in the loop");
 			float reading = input_.getVoltage();
 			float reading33 = input_33.getVoltage();
@@ -92,9 +94,11 @@ public class IOIOThreadExt extends IOIOThread{
 			sleep(50);
 		} catch (InterruptedException e) {
 			System.out.println(" interrupted exception ioio thread ext");
+			RunningScreen.piezoSignal=false;
 			ioio_.disconnect();
 		} catch (ConnectionLostException e) {
 			System.out.println(" connection lost ioio thread ext");
+			RunningScreen.piezoSignal=false;
 			throw e;
 		}
 	}

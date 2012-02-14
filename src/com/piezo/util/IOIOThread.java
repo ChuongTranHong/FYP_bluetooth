@@ -78,8 +78,9 @@ public abstract class IOIOThread extends Thread {
 					}
 					ioio_ = IOIOFactory.create(spec_.className, spec_.args);
 				}
-				
+
 				ioio_.waitForConnect();
+
 				connected_ = true;
 				
 				setup();
@@ -88,10 +89,12 @@ public abstract class IOIOThread extends Thread {
 				}
 				ioio_.disconnect();
 			} catch (ConnectionLostException e) {
+				RunningScreen.piezoSignal = false;
 				if (abort_) {
 					break;
 				}
 			} catch (InterruptedException e) {
+				
 				ioio_.disconnect();
 				break;
 			} catch (IncompatibilityException e) {
@@ -104,10 +107,12 @@ public abstract class IOIOThread extends Thread {
 					ioio_.disconnect();
 				}
 			} catch (Exception e) {
+				System.out.println("in exception handler");
 				Log.e(TAG, "Unexpected exception caught", e);
 				ioio_.disconnect();
 				break;
 			} finally {
+				
 				try {
 					if (ioio_ != null) {
 						ioio_.waitForDisconnect();

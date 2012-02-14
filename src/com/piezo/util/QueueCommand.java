@@ -23,9 +23,9 @@ public class QueueCommand  {
 		if(listCommand.size()>0) return listCommand.remove(0);
 		else return null;
 	}
-	public void clear() {
+	public static void clear() {
 		// TODO Auto-generated method stub
-		
+		listCommand.clear();
 	}
 	public boolean isEmpty() {
 		// TODO Auto-generated method stub
@@ -41,5 +41,6 @@ public class QueueCommand  {
 		// TODO Auto-generated method stub
 		return listCommand.size();
 	}
+	
 
 }

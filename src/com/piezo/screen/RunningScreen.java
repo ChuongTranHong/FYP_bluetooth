@@ -44,13 +44,13 @@ import com.piezo.util.PoolStore;
 import com.piezo.util.QueueCommand;
 import com.piezo.util.Setting;
 
-public class RunningScreen extends GameScreen{
+public class RunningScreen extends GameScreen {
 	private static final String TAG = "RunningScreen";
 	public static int score = 0;
 	boolean running = true;
 	public static IOIOConnectionSpec currentSpec_;
 	private Collection<IOIOThread> threads_ = new LinkedList<IOIOThread>();
-//	public IOIOThread ioio_thread;
+
 	int screenHeight, screenWidth;
 	PiezoGame game;
 	List<CuttingObject> objectList;
@@ -69,10 +69,12 @@ public class RunningScreen extends GameScreen{
 	byte index;
 	boolean getAcceleration = false;
 	RunningScreen runningScreen;
-	float lastYAccel=0,currentYAccel=0,differentAccel=0;;
-	public RunningScreen(final PiezoGame game)  {
-		
-		Setting.training=false;
+	float lastYAccel = 0, currentYAccel = 0, differentAccel = 0;;
+	public static boolean piezoSignal = false;
+
+	public RunningScreen(final PiezoGame game) {
+
+		Setting.training = false;
 		screenHeight = Gdx.graphics.getHeight();
 		screenWidth = Gdx.graphics.getWidth();
 		this.game = game;
@@ -91,64 +93,61 @@ public class RunningScreen extends GameScreen{
 				Gdx.files.internal("data/sword1.png")));
 		objectList = new ArrayList<CuttingObject>();
 		objectList.add(new Apple(0, 0, screenWidth / 2, screenHeight - 50));
-//		if (!Setting.debug)
-			objectList.add(new Egg(screenWidth / 2, 0, screenWidth / 2,
+
+		objectList.add(new Egg(screenWidth / 2, 0, screenWidth / 2,
 				screenHeight - 50));
 		if (Setting.debug)
-//			voltageDiagram = new VoltageDiagram(screenWidth / 2, 0,
-//					screenWidth / 2, screenHeight);
-			voltageDiagram = new VoltageDiagram(0, 0,
-					screenWidth , screenHeight);
+
+			voltageDiagram = new VoltageDiagram(0, 0, screenWidth, screenHeight);
 		spriteBatch = new SpriteBatch();
 
 		font = new BitmapFont(Gdx.files.internal("data/c.fnt"),
 				Gdx.files.internal("data/c.png"), false);
 		skin = new Skin(Gdx.files.internal("data/uiskin.json"),
 				Gdx.files.internal("data/uiskin.png"));
-		
+
 		Button menuButton = new TextButton("Menu",
 				skin.getStyle(TextButtonStyle.class), "menu");
 		menuButton.x = screenWidth - 150;
 		menuButton.y = screenHeight - 50;
 		menuButton.setClickListener(new ClickListener() {
-				 
+
 			public void click(Actor actor, float x, float y) {
 				// TODO Auto-generated method stub
 				System.out.println("in click menu");
-//				PoolStore.runningScreen= this;
+				// PoolStore.runningScreen= this;
 				runningScreen.dispose();
 				game.setScreen(new MainMenu(game));
 			}
 		});
-		
 
 		ui.addActor(menuButton);
-		if(Setting.androidMode){
-			game.mainApplication.runOnUiThread(new Runnable(){
-				 
+		if (Setting.androidMode) {
+			game.mainApplication.runOnUiThread(new Runnable() {
+
 				@Override
 				public void run() {
 					// TODO Auto-generated method stub
-					 createAllThreads();
-					   startAllThreads();
+					createAllThreads();
+					startAllThreads();
 				}
 			});
-		
-			
-			
+
 		}
-		
+
 		System.out.println("ioio thread start ");
 		score = 0;
 		swordX = 50;
 		currentPosition = 0;
 		running = true;
-		runningScreen =this;
+		runningScreen = this;
+		QueueCommand.clear();
 	}
-	public RunningScreen reset(){
+
+	public RunningScreen reset() {
 		score = 0;
 		swordX = 50;
-		for(index=0;index<objectList.size();index++){
+		for (index = 0; index < objectList.size(); index++) {
 			CuttingObject object = objectList.get(index);
 
 			CuttingObject newObject = PoolStore.poolArray.get(
@@ -161,59 +160,60 @@ public class RunningScreen extends GameScreen{
 
 			objectList.add(index, newObject);
 		}
-		currentPosition=0;
+		currentPosition = 0;
 		running = true;
-		if (Setting.debug && voltageDiagram ==null)
-			voltageDiagram = new VoltageDiagram(0, 0,
-					screenWidth , screenHeight);
-		else if(Setting.debug)
+		if (Setting.debug && voltageDiagram == null)
+			voltageDiagram = new VoltageDiagram(0, 0, screenWidth, screenHeight);
+		else if (Setting.debug)
 			voltageDiagram.reset();
-		if(Setting.androidMode){
-			game.mainApplication.runOnUiThread(new Runnable(){
-				 
+		if (Setting.androidMode) {
+			game.mainApplication.runOnUiThread(new Runnable() {
+
 				@Override
 				public void run() {
 					// TODO Auto-generated method stub
-					 createAllThreads();
-					   startAllThreads();
+					createAllThreads();
+					startAllThreads();
 				}
 			});
 		}
-//			objectList.remove(index).free();
-//		objectList.add(object)
+		QueueCommand.clear();
+		// objectList.remove(index).free();
+		// objectList.add(object)
 		return this;
 	}
+
 	public void render(float delta) {
+		if (piezoSignal || Setting.inputType != Setting.PIEZO) {
+			currentTime = System.currentTimeMillis() / 1000;
+			if (lastTime != currentTime && running) {
+				for (index = 0; index < objectList.size(); index++)
+					objectList.get(index).decreaseTime();
 
-		currentTime = System.currentTimeMillis() / 1000;
-		if (lastTime != currentTime && running) {
-			for(index= 0;index<objectList.size();index++)
-				objectList.get(index).decreaseTime();
+				lastTime = currentTime;
 
-			lastTime = currentTime;
-
+			}
+			update();
 		}
-		update();
 
-		
-//		if (QueueCommand.size() > 0) {
-//			Command command = QueueCommand.deQueue();
-//			 System.out.println("dequeue new command");
-////			if(command.left){
-////				System.out.println(" cut left");
-////				commandLeft(command);
-////				
-////			}else{
-////				System.out.println("cut right");
-////				commandRight(command);
-////			}
-//			if (objectList.get(0).takeCut(command.currentCommand, command.left))
-//				running = true;
-//			else
-//				running = false;
-//			sound.play(Setting.sound);
-//			PoolStore.commandPool.free(command);
-//		}
+		// if (QueueCommand.size() > 0) {
+		// Command command = QueueCommand.deQueue();
+		// System.out.println("dequeue new command");
+		// // if(command.left){
+		// // System.out.println(" cut left");
+		// // commandLeft(command);
+		// //
+		// // }else{
+		// // System.out.println("cut right");
+		// // commandRight(command);
+		// // }
+		// if (objectList.get(0).takeCut(command.currentCommand, command.left))
+		// running = true;
+		// else
+		// running = false;
+		// sound.play(Setting.sound);
+		// PoolStore.commandPool.free(command);
+		// }
 
 		Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
@@ -222,17 +222,17 @@ public class RunningScreen extends GameScreen{
 		spriteBatch.disableBlending();
 		spriteBatch.draw(background, 0, 0, screenWidth, screenHeight);
 		spriteBatch.enableBlending();
-		objectList.get(0).draw(spriteBatch, font, cutleft, cutRight);
-
-//		if (!Setting.debug) {
+		if (piezoSignal || Setting.inputType != Setting.PIEZO) {
+			objectList.get(0).draw(spriteBatch, font, cutleft, cutRight);
 
 			objectList.get(1).draw(spriteBatch, font, cutleft, cutRight);
-//		}
-
+			spriteBatch.draw(sword, swordX, screenHeight - 400);
+		} else
+			font.draw(spriteBatch, "Waiting for connection",
+					screenWidth / 2 - 100, screenHeight / 2);
 		font.draw(spriteBatch, "Score: " + score, screenWidth - 300,
 				screenHeight - 30);
-		spriteBatch.draw(sword, swordX, screenHeight - 400);
-		
+
 		spriteBatch.end();
 		ui.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
 
@@ -240,7 +240,8 @@ public class RunningScreen extends GameScreen{
 
 		ui.draw();
 		for (index = 0; index < objectList.size(); index++) {
-			if (objectList.get(index).isDead() && objectList.get(index).finishAnimation) {
+			if (objectList.get(index).isDead()
+					&& objectList.get(index).finishAnimation) {
 				CuttingObject object = objectList.get(index);
 
 				CuttingObject newObject = PoolStore.poolArray.get(
@@ -257,53 +258,52 @@ public class RunningScreen extends GameScreen{
 		if (Setting.debug)
 			voltageDiagram.render();
 		if (!running) {
-//			PoolStore.runningScreen=this;
+			// PoolStore.runningScreen=this;
 			this.dispose();
 			game.setScreen(new GameOverScreen(game, score));
 		}
 	}
 
-	private void commandRight(Command command){
+	private void commandRight(Command command) {
 		switch (currentPosition) {
 		case 0:
-			if (!(objectList.get(0).takeCut(command.currentCommand, command.left)
-					&& running) )
-			
+			if (!(objectList.get(0).takeCut(command.currentCommand,
+					command.left) && running))
 
 				running = false;
-//			} else {
-//				running = false;
-//
-//			}
+			// } else {
+			// running = false;
+			//
+			// }
 			System.out.println("position 0 cut right");
 			swordX = screenWidth / 2;
 			currentPosition = 1;
 			break;
 		case 1:
-//			if(Setting.debug)break;
-			if (!(objectList.get(1).takeCut(command.currentCommand, command.left)
-					&& running))
-			{
+			// if(Setting.debug)break;
+			if (!(objectList.get(1).takeCut(command.currentCommand,
+					command.left) && running)) {
 
 				running = false;
-			} 
-//			else {
-//				running = false;
-//
-//			}
+			}
+			// else {
+			// running = false;
+			//
+			// }
 			System.out.println("position 1 cut right");
 			swordX = screenWidth - 100;
 			currentPosition = 2;
-			
+
 			break;
 		}
 		sound.play(Setting.sound);
 	}
-	private void commandLeft(Command command){
+
+	private void commandLeft(Command command) {
 		switch (currentPosition) {
 		case 1:
-			if (!(objectList.get(0).takeCut(command.currentCommand, command.left)
-					&& running))
+			if (!(objectList.get(0).takeCut(command.currentCommand,
+					command.left) && running))
 				running = false;
 			else
 				running = true;
@@ -312,9 +312,9 @@ public class RunningScreen extends GameScreen{
 			currentPosition = 0;
 			break;
 		case 2:
-//			if(Setting.debug)break;
-			if (!(objectList.get(1).takeCut(command.currentCommand, command.left)
-					&& running))
+
+			if (!(objectList.get(1).takeCut(command.currentCommand,
+					command.left) && running))
 				running = false;
 			else
 				running = true;
@@ -325,6 +325,7 @@ public class RunningScreen extends GameScreen{
 		}
 		sound.play(Setting.sound);
 	}
+
 	public void resize(int width, int height) {
 		// TODO Auto-generated method stub
 
@@ -342,10 +343,10 @@ public class RunningScreen extends GameScreen{
 
 	public void pause() {
 		// TODO Auto-generated method stub
-	
-		if ( Setting.androidMode) {
-			game.mainApplication.runOnUiThread(new Runnable(){
-				 
+
+		if (Setting.androidMode) {
+			game.mainApplication.runOnUiThread(new Runnable() {
+
 				@Override
 				public void run() {
 					// TODO Auto-generated method stub
@@ -356,7 +357,7 @@ public class RunningScreen extends GameScreen{
 					}
 				}
 			});
-			
+
 			System.out.println("end on Pause");
 		}
 	}
@@ -365,15 +366,15 @@ public class RunningScreen extends GameScreen{
 		// TODO Auto-generated method stub
 
 		System.out.println("ioio thread start11 ");
-		if(Setting.androidMode){
-			game.mainApplication.runOnUiThread(new Runnable(){
-				 
+		if (Setting.androidMode) {
+			game.mainApplication.runOnUiThread(new Runnable() {
+
 				@Override
 				public void run() {
-					System.out.println("in the create and run thread resume ");
+
 					// TODO Auto-generated method stub
-					 createAllThreads();
-					   startAllThreads();
+					createAllThreads();
+					startAllThreads();
 				}
 			});
 		}
@@ -381,19 +382,20 @@ public class RunningScreen extends GameScreen{
 
 	public void dispose() {
 		// TODO Auto-generated method stub
-		if(Setting.androidMode){
-			System.out.println("dispose function");
-			game.mainApplication.runOnUiThread(new Runnable(){
-				 
-				@Override
+		if (Setting.androidMode) {
+
+			game.mainApplication.runOnUiThread(new Runnable() {
+
 				public void run() {
-					System.out.println("in the create and run thread resume ");
 					// TODO Auto-generated method stub
-					 createAllThreads();
-					   startAllThreads();
+					abortAllThreads();
+					try {
+						joinAllThreads();
+					} catch (InterruptedException e) {
+					}
 				}
 			});
-			 sound.dispose();
+			sound.dispose();
 		}
 	}
 
@@ -412,17 +414,18 @@ public class RunningScreen extends GameScreen{
 			piezoInput();
 		}
 	}
-	private void touchScreenInput(){
+
+	private void touchScreenInput() {
 		if (Gdx.input.justTouched()) {
-//			int x = Gdx.input.getX();
+			// int x = Gdx.input.getX();
 			Command command = PoolStore.commandPool.obtain();
-//			command.currentCommand= Command.NORMAL_SHORT_FORCE;
+			// command.currentCommand= Command.NORMAL_SHORT_FORCE;
 			if (Gdx.input.getX() > screenWidth / 2) {
-				command.currentCommand= Command.STRONG_SHORT_FORCE;
+				command.currentCommand = Command.STRONG_SHORT_FORCE;
 				command.left = false;
 				commandRight(command);
 			} else {
-				command.currentCommand= Command.NORMAL_SHORT_FORCE;
+				command.currentCommand = Command.NORMAL_SHORT_FORCE;
 				command.left = true;
 				commandLeft(command);
 			}
@@ -430,66 +433,74 @@ public class RunningScreen extends GameScreen{
 			// System.out.println(" x "+x+" y " + y);
 		}
 	}
-	private void accelerometerInput(){
+
+	private void accelerometerInput() {
 		currentYAccel = Gdx.input.getAccelerometerY();
-		differentAccel = currentYAccel- lastYAccel;
-		System.out.println("different accel "+ differentAccel);
-		if(Math.abs(differentAccel)<1) getAcceleration =false;
+		differentAccel = currentYAccel - lastYAccel;
+		System.out.println("different accel " + differentAccel);
+		if (Math.abs(differentAccel) < 1)
+			getAcceleration = false;
 		else {
-			if(!getAcceleration){
-				Command command =PoolStore.commandPool.obtain();
-				if(Math.abs(differentAccel)<2){
+			if (!getAcceleration) {
+				Command command = PoolStore.commandPool.obtain();
+				if (Math.abs(differentAccel) < 2) {
 					command.currentCommand = Command.NORMAL_SHORT_FORCE;
-					
-				}else command.currentCommand = Command.STRONG_SHORT_FORCE;
-				if(differentAccel < 0 )command.left =true;
-				else command.left = false;
+
+				} else
+					command.currentCommand = Command.STRONG_SHORT_FORCE;
+				if (differentAccel < 0)
+					command.left = true;
+				else
+					command.left = false;
 				objectList.get(0).takeCut(command.currentCommand, command.left);
 				PoolStore.commandPool.free(command);
-				getAcceleration=true;
+				getAcceleration = true;
 			}
 		}
-		lastYAccel =currentYAccel;
-		/*if((int)Gdx.input.getAccelerometerY()<0 && !getAcceleration){
-			objectList.get(0).takeCut(Command.NORMAL_SHORT_FORCE, true);
-//			System.out.println("acceleration left");
-			getAcceleration= true;
-		}else if((int)Gdx.input.getAccelerometerY()>0 && ! getAcceleration){
-			objectList.get(0).takeCut(Command.NORMAL_SHORT_FORCE, false);
-//			System.out.println("acceleration right");
-			getAcceleration= true;
-		}else if((int)Gdx.input.getAccelerometerY()==0){
-//			System.out.println("reset acceleration");
-			getAcceleration = false;
-		}*/
+		lastYAccel = currentYAccel;
+		/*
+		 * if((int)Gdx.input.getAccelerometerY()<0 && !getAcceleration){
+		 * objectList.get(0).takeCut(Command.NORMAL_SHORT_FORCE, true); //
+		 * System.out.println("acceleration left"); getAcceleration= true; }else
+		 * if((int)Gdx.input.getAccelerometerY()>0 && ! getAcceleration){
+		 * objectList.get(0).takeCut(Command.NORMAL_SHORT_FORCE, false); //
+		 * System.out.println("acceleration right"); getAcceleration= true;
+		 * }else if((int)Gdx.input.getAccelerometerY()==0){ //
+		 * System.out.println("reset acceleration"); getAcceleration = false; }
+		 */
 	}
-	private void piezoInput(){
+
+	private void piezoInput() {
 		if (QueueCommand.size() > 0) {
 			Command command = QueueCommand.deQueue();
-			 System.out.println("dequeue new command");
-			if(command.left){
+			System.out.println("dequeue new command");
+			if (command.left) {
 				System.out.println(" cut left");
 				commandLeft(command);
-				
-			}else{
+
+			} else {
 				System.out.println("cut right");
 				commandRight(command);
 			}
-//			if (objectList.get(0).takeCut(command.currentCommand, command.left))
-//				running = true;
-//			else
-//				running = false;
+			// if (objectList.get(0).takeCut(command.currentCommand,
+			// command.left))
+			// running = true;
+			// else
+			// running = false;
 			sound.play(Setting.sound);
 			PoolStore.commandPool.free(command);
 		}
 	}
+
 	protected IOIOThread createIOIOThread() {
 		return new IOIOThreadExt();
 	}
+
 	protected IOIOThread createIOIOThread(String connectionClass,
 			Object[] connectionArgs) {
 		return createIOIOThread();
 	}
+
 	private void abortAllThreads() {
 		for (IOIOThread thread : threads_) {
 			thread.abort();
@@ -504,7 +515,7 @@ public class RunningScreen extends GameScreen{
 
 	private void createAllThreads() {
 		threads_.clear();
-		
+
 		Collection<IOIOConnectionSpec> specs = getConnectionSpecs();
 		for (IOIOConnectionSpec spec : specs) {
 			currentSpec_ = spec;
@@ -548,4 +559,3 @@ public class RunningScreen extends GameScreen{
 	}
 
 }
- 
