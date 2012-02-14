@@ -65,6 +65,7 @@ public class IOIOThreadExt extends IOIOThread{
 			throw e;
 		}*/
 		try {
+			System.out.println("in the loop");
 			float reading = input_.getVoltage();
 			float reading33 = input_33.getVoltage();
 			if (reading < 1)
@@ -90,9 +91,10 @@ public class IOIOThreadExt extends IOIOThread{
 			
 			sleep(50);
 		} catch (InterruptedException e) {
+			System.out.println(" interrupted exception ioio thread ext");
 			ioio_.disconnect();
 		} catch (ConnectionLostException e) {
-		
+			System.out.println(" connection lost ioio thread ext");
 			throw e;
 		}
 	}

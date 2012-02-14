@@ -9,5 +9,5 @@ public class Setting {
 	public static float music=0;// Config.asFloat("defaultMusic", 0);
 	public static boolean debug = true;
 	public static byte inputType =PIEZO;
-	
+	public static boolean training = false;
 }

@@ -44,7 +44,7 @@ import com.piezo.util.PoolStore;
 import com.piezo.util.QueueCommand;
 import com.piezo.util.Setting;
 
-public class RunningScreen extends GameScreen {
+public class RunningScreen extends GameScreen{
 	private static final String TAG = "RunningScreen";
 	public static int score = 0;
 	boolean running = true;
@@ -68,8 +68,11 @@ public class RunningScreen extends GameScreen {
 	public static VoltageDiagram voltageDiagram;
 	byte index;
 	boolean getAcceleration = false;
+	RunningScreen runningScreen;
 	float lastYAccel=0,currentYAccel=0,differentAccel=0;;
-	public RunningScreen(final PiezoGame game) {
+	public RunningScreen(final PiezoGame game)  {
+		
+		Setting.training=false;
 		screenHeight = Gdx.graphics.getHeight();
 		screenWidth = Gdx.graphics.getWidth();
 		this.game = game;
@@ -108,14 +111,16 @@ public class RunningScreen extends GameScreen {
 		menuButton.x = screenWidth - 150;
 		menuButton.y = screenHeight - 50;
 		menuButton.setClickListener(new ClickListener() {
-
+				 
 			public void click(Actor actor, float x, float y) {
 				// TODO Auto-generated method stub
 				System.out.println("in click menu");
 //				PoolStore.runningScreen= this;
+				runningScreen.dispose();
 				game.setScreen(new MainMenu(game));
 			}
 		});
+		
 
 		ui.addActor(menuButton);
 		if(Setting.androidMode){
@@ -138,7 +143,7 @@ public class RunningScreen extends GameScreen {
 		swordX = 50;
 		currentPosition = 0;
 		running = true;
-
+		runningScreen =this;
 	}
 	public RunningScreen reset(){
 		score = 0;
@@ -339,11 +344,19 @@ public class RunningScreen extends GameScreen {
 		// TODO Auto-generated method stub
 	
 		if ( Setting.androidMode) {
-			abortAllThreads();
-			try {
-				joinAllThreads();
-			} catch (InterruptedException e) {
-			}
+			game.mainApplication.runOnUiThread(new Runnable(){
+				 
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					abortAllThreads();
+					try {
+						joinAllThreads();
+					} catch (InterruptedException e) {
+					}
+				}
+			});
+			
 			System.out.println("end on Pause");
 		}
 	}
@@ -351,17 +364,35 @@ public class RunningScreen extends GameScreen {
 	public void resume() {
 		// TODO Auto-generated method stub
 
-		System.out.println("ioio thread start ");
+		System.out.println("ioio thread start11 ");
+		if(Setting.androidMode){
+			game.mainApplication.runOnUiThread(new Runnable(){
+				 
+				@Override
+				public void run() {
+					System.out.println("in the create and run thread resume ");
+					// TODO Auto-generated method stub
+					 createAllThreads();
+					   startAllThreads();
+				}
+			});
+		}
 	}
 
 	public void dispose() {
 		// TODO Auto-generated method stub
 		if(Setting.androidMode){
-			abortAllThreads();
-			try {
-				joinAllThreads();
-			} catch (InterruptedException e) {
-			}
+			System.out.println("dispose function");
+			game.mainApplication.runOnUiThread(new Runnable(){
+				 
+				@Override
+				public void run() {
+					System.out.println("in the create and run thread resume ");
+					// TODO Auto-generated method stub
+					 createAllThreads();
+					   startAllThreads();
+				}
+			});
 			 sound.dispose();
 		}
 	}
@@ -473,6 +504,7 @@ public class RunningScreen extends GameScreen {
 
 	private void createAllThreads() {
 		threads_.clear();
+		
 		Collection<IOIOConnectionSpec> specs = getConnectionSpecs();
 		for (IOIOConnectionSpec spec : specs) {
 			currentSpec_ = spec;
@@ -514,4 +546,6 @@ public class RunningScreen extends GameScreen {
 							+ discoveryClassName, e);
 		}
 	}
+
 }
+ 

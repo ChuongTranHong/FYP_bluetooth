@@ -78,8 +78,10 @@ public abstract class IOIOThread extends Thread {
 					}
 					ioio_ = IOIOFactory.create(spec_.className, spec_.args);
 				}
+				
 				ioio_.waitForConnect();
 				connected_ = true;
+				
 				setup();
 				while (!abort_) {
 					loop();

@@ -1,6 +1,7 @@
 package com.piezo.util;
 
 import com.piezo.screen.RunningScreen;
+import com.piezo.screen.TrainingScreen;
 import com.piezo.util.BufferData;
 import com.piezo.util.Command;
 import com.piezo.util.Data;
@@ -25,9 +26,16 @@ public class ClassificationThread extends Thread{
 //				 System.out.println("in the mchildhandler value "+data.value+" inver "+data.valueInver);
 				returnState = buffer
 						.insertData(data.value, data.valueInver);
-				if( RunningScreen.voltageDiagram!=null) {
-					System.out.println("add value to voltage diagram");
-					RunningScreen.voltageDiagram.addVertex(data.value,data.valueInver,returnState);
+				if(!Setting.training)
+				{
+					if( RunningScreen.voltageDiagram!=null) {
+						System.out.println("add value to voltage diagram");
+						RunningScreen.voltageDiagram.addVertex(data.value,data.valueInver,returnState);
+					}
+				}else {
+					if(TrainingScreen.voltageDiagram!=null){
+						TrainingScreen.voltageDiagram.addVertex(data.value,data.valueInver,returnState);
+					}
 				}
 //				diagram.insertValue(data.value, data.valueInver, index,returnState);
 				if (returnState.compareTo( currentState)!=0 ){

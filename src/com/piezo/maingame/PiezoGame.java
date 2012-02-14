@@ -10,6 +10,7 @@ import com.piezo.screen.GameOverScreen;
 import com.piezo.screen.HelpScreen;
 import com.piezo.screen.MainMenu;
 import com.piezo.screen.RunningScreen;
+import com.piezo.screen.TrainingScreen;
 
 import com.piezo.util.Config;
 
