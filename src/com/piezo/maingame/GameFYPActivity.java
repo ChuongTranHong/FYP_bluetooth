@@ -17,8 +17,10 @@ public class GameFYPActivity extends  AndroidApplication {
 		super.onCreate(savedInstanceState);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		config.useWakelock = true;
+		config.useAccelerometer= true;
 		
-		initialize(new PiezoGame(this), false);
+		
+		initialize(new PiezoGame(this), config);
 		Setting.androidMode = true;
 	}
 }

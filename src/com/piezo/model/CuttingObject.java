@@ -32,6 +32,7 @@ public abstract class CuttingObject {
 	protected List<TextOutput> textOutList=new ArrayList<TextOutput>();
 	protected byte compatibleCut;
 	protected Texture texture;
+	protected String texturePath;
 	protected TextureRegion textureRegion;
 	protected float beginingRatio=2f;
 	protected float currentRatio=beginingRatio;
@@ -50,6 +51,7 @@ public abstract class CuttingObject {
 		return textureRegion;
 	}
 	public void draw(SpriteBatch spriteBatch,BitmapFont font,TextureRegion leftTexture,TextureRegion rightTexture){
+		
 		finishAnimation = true;
 		if(currentRatio>targetRatio){
 			currentRatio-=0.05;
@@ -150,6 +152,10 @@ public abstract class CuttingObject {
 	
 	}
 	public void reset(){
+		textureLifeSpan.setRegion(new Texture((Gdx.files.internal(Config.asString("lifeSpanTexture")))));
+
+		texture = new  Texture(Gdx.files.internal(Config.asString(texturePath)));
+
 		currentLife=lifeSpan;
 		timer.timeCountDown=initTimer;
 		currentRatio=targetRatio=beginingRatio;

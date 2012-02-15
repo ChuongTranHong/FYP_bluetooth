@@ -17,9 +17,10 @@ import com.piezo.util.Timer;
 public class Bomb extends CuttingObject{
 
 	public Bomb(){
+		texturePath= "bombTexture";
 		lifeSpan=Config.asShort("bomb.LifeSpan", (short) 10);
 		currentLife=lifeSpan;
-		texture=new Texture(Gdx.files.internal(Config.asString("bombTexture")));
+		texture=new Texture(Gdx.files.internal(Config.asString(texturePath)));
 		textureRegion = new TextureRegion(texture);
 		initTimer = Config.asByte("bomb.Timer", (byte) 3);
 		timer = new Timer(initTimer);
@@ -30,9 +31,10 @@ public class Bomb extends CuttingObject{
 		bomb=true;
 	}
 	public Bomb(float x, float y, float width, float height){
+		texturePath= "bombTexture";
 		lifeSpan=Config.asShort("bomb.LifeSpan", (short) 10);
 		currentLife=lifeSpan;
-		texture=new Texture(Gdx.files.internal(Config.asString("bombTexture")));
+		texture=new Texture(Gdx.files.internal(Config.asString(texturePath)));
 		textureRegion = new TextureRegion(texture);
 		initTimer = Config.asByte("bomb.Timer", (byte) 3);
 		timer = new Timer(initTimer);

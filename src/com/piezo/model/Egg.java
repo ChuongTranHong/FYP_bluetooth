@@ -21,10 +21,11 @@ public class Egg extends CuttingObject {
 	protected final byte DAMAGE_NORMAL_FORCE = Config.asByte("egg.NormalDamage", (byte) 10);
 	protected byte timeFail=0;
 	public Egg(){
+		texturePath = "eggTexture";
 		lifeSpan =Config.asShort("egg.LifeSpan", (short) 50);
 		currentLife=lifeSpan;
 		
-		texture=new Texture(Gdx.files.internal(Config.asString("eggTexture")));
+		texture=new Texture(Gdx.files.internal(Config.asString(texturePath)));
 		textureRegion= new TextureRegion(texture,0,0,200,256);
 		initTimer = Config.asByte("egg.Timer", (byte) 10);
 		timer= new Timer(initTimer);
@@ -35,9 +36,10 @@ public class Egg extends CuttingObject {
 	}
 	
 	public Egg(float x, float y, float width,float height){
+		texturePath = "eggTexture";
 		lifeSpan =Config.asShort("egg.LifeSpan", (short) 50);
 		currentLife=lifeSpan;
-		texture=new Texture(Gdx.files.internal(Config.asString("eggTexture")));
+		texture=new Texture(Gdx.files.internal(Config.asString(texturePath)));
 		textureRegion= new TextureRegion(texture,0,0,200,256);
 		initTimer = Config.asByte("egg.Timer", (byte) 10);
 		timer= new Timer(initTimer);

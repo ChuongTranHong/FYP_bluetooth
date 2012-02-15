@@ -441,7 +441,7 @@ public class RunningScreen extends GameScreen {
 		if (Math.abs(differentAccel) < 1)
 			getAcceleration = false;
 		else {
-			if (!getAcceleration) {
+			if (!getAcceleration && Math.abs(differentAccel) >1) {
 				Command command = PoolStore.commandPool.obtain();
 				if (Math.abs(differentAccel) < 2) {
 					command.currentCommand = Command.NORMAL_SHORT_FORCE;
