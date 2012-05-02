@@ -62,7 +62,7 @@ public class RunningScreen extends GameScreen {
 	BitmapFont font;
 	Skin skin;
 	Stage ui;
-	byte currentPosition = 0;
+	byte currentPosition = 1;
 	int swordX = 50;
 
 	public static VoltageDiagram voltageDiagram;
@@ -96,7 +96,7 @@ public class RunningScreen extends GameScreen {
 
 		objectList.add(new Egg(screenWidth / 2, 0, screenWidth / 2,
 				screenHeight - 50));
-		if (Setting.debug)
+		if (Setting.debug && Setting.inputType == Setting.PIEZO)
 
 			voltageDiagram = new VoltageDiagram(0, 0, screenWidth, screenHeight);
 		spriteBatch = new SpriteBatch();
@@ -137,8 +137,8 @@ public class RunningScreen extends GameScreen {
 
 		System.out.println("ioio thread start ");
 		score = 0;
-		swordX = 50;
-		currentPosition = 0;
+		swordX = screenWidth/2;
+		currentPosition = 1;
 		running = true;
 		runningScreen = this;
 		QueueCommand.clear();
@@ -146,7 +146,7 @@ public class RunningScreen extends GameScreen {
 
 	public RunningScreen reset() {
 		score = 0;
-		swordX = 50;
+		swordX = screenWidth/2;
 		for (index = 0; index < objectList.size(); index++) {
 			CuttingObject object = objectList.get(index);
 
@@ -160,11 +160,11 @@ public class RunningScreen extends GameScreen {
 
 			objectList.add(index, newObject);
 		}
-		currentPosition = 0;
+		currentPosition = 1;
 		running = true;
-		if (Setting.debug && voltageDiagram == null)
+		if (Setting.debug && Setting.inputType == Setting.PIEZO && voltageDiagram == null)
 			voltageDiagram = new VoltageDiagram(0, 0, screenWidth, screenHeight);
-		else if (Setting.debug)
+		else if (Setting.debug && Setting.inputType == Setting.PIEZO)
 			voltageDiagram.reset();
 		if (Setting.androidMode) {
 			game.mainApplication.runOnUiThread(new Runnable() {
@@ -255,7 +255,7 @@ public class RunningScreen extends GameScreen {
 				objectList.add(index, newObject);
 			}
 		}
-		if (Setting.debug)
+		if (Setting.debug && Setting.inputType == Setting.PIEZO)
 			voltageDiagram.render();
 		if (!running) {
 			// PoolStore.runningScreen=this;
@@ -421,7 +421,7 @@ public class RunningScreen extends GameScreen {
 			Command command = PoolStore.commandPool.obtain();
 			// command.currentCommand= Command.NORMAL_SHORT_FORCE;
 			if (Gdx.input.getX() > screenWidth / 2) {
-				command.currentCommand = Command.STRONG_SHORT_FORCE;
+				command.currentCommand = Command.NORMAL_SHORT_FORCE;
 				command.left = false;
 				commandRight(command);
 			} else {
@@ -436,12 +436,14 @@ public class RunningScreen extends GameScreen {
 
 	private void accelerometerInput() {
 		currentYAccel = Gdx.input.getAccelerometerY();
+		
 		differentAccel = currentYAccel - lastYAccel;
 		System.out.println("different accel " + differentAccel);
 		if (Math.abs(differentAccel) < 1)
 			getAcceleration = false;
 		else {
 			if (!getAcceleration && Math.abs(differentAccel) >1) {
+				
 				Command command = PoolStore.commandPool.obtain();
 				if (Math.abs(differentAccel) < 2) {
 					command.currentCommand = Command.NORMAL_SHORT_FORCE;
@@ -452,7 +454,9 @@ public class RunningScreen extends GameScreen {
 					command.left = true;
 				else
 					command.left = false;
+	
 				objectList.get(0).takeCut(command.currentCommand, command.left);
+			
 				PoolStore.commandPool.free(command);
 				getAcceleration = true;
 			}

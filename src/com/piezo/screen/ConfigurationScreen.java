@@ -35,6 +35,7 @@ public class ConfigurationScreen extends GameScreen {
 	Stage ui;
 	private Table window;
 	CheckBox checkBox;
+
 	public ConfigurationScreen(final PiezoGame game) {
 		this.game = game;
 		skin = new Skin(Gdx.files.internal("data/uiskinconfig.json"),
@@ -82,42 +83,43 @@ public class ConfigurationScreen extends GameScreen {
 				Setting.sound = value / 10;
 			}
 		});
-		
-		
-		
-		
-		
-		
-		/*Button trainingButton = new TextButton("Training",
-				skin.getStyle(TextButtonStyle.class), "training");
-		Button resetButton = new TextButton("Reset",
-				skin.getStyle(TextButtonStyle.class), "reset");*/
+
+		/*
+		 * Button trainingButton = new TextButton("Training",
+		 * skin.getStyle(TextButtonStyle.class), "training"); Button resetButton
+		 * = new TextButton("Reset", skin.getStyle(TextButtonStyle.class),
+		 * "reset");
+		 */
 		Button backButton = new TextButton("Back",
 				skin.getStyle(TextButtonStyle.class), "back");
-		 checkBox = new CheckBox("Debug",
-				skin.getStyle(CheckBoxStyle.class), "checkbox");
-		 checkBox.setChecked(Setting.debug);
+		checkBox = new CheckBox("Debug", skin.getStyle(CheckBoxStyle.class),
+				"checkbox");
+		checkBox.setChecked(Setting.debug);
 		checkBox.setClickListener(new ClickListener() {
-			
+
 			@Override
 			public void click(Actor actor, float x, float y) {
 				// TODO Auto-generated method stub
 				Setting.debug = checkBox.isChecked();
-				if(Setting.debug)System.out.println("in debug");
-				else System.out.println("not in debug");
+				if (Setting.debug)
+					System.out.println("in debug");
+				else
+					System.out.println("not in debug");
 			}
 		});
-		SelectBox dropdown = new SelectBox(new String[] {"Piezo", "Touch Screen", "Accelerometer"},
+		SelectBox dropdown = new SelectBox(new String[] { "Piezo",
+				"Touch Screen", "Accelerometer" },
 				skin.getStyle(SelectBoxStyle.class), "inputType");
 		dropdown.setSelection(Setting.inputType);
-		dropdown.setSelectionListener(new SelectionListener(){
+		dropdown.setSelectionListener(new SelectionListener() {
 
 			@Override
 			public void selected(Actor actor, int index, String value) {
 				// TODO Auto-generated method stub
-				Setting.inputType=(byte)index;
+				Setting.inputType = (byte) index;
+
 			}
-			
+
 		});
 		window.align("top");
 		window.padLeft(20).padTop(20);
@@ -130,10 +132,12 @@ public class ConfigurationScreen extends GameScreen {
 		window.row().padBottom(10).padTop(10);
 		window.add(soundLabel).padRight(20);
 		window.add(soundSlider).fillX().expandX();
-		/*window.row().padBottom(10).padTop(10);
-		window.add(trainingButton).align("left");
-		window.row().padBottom(10).padTop(10);
-		window.add(resetButton).align("left");*/
+		/*
+		 * window.row().padBottom(10).padTop(10);
+		 * window.add(trainingButton).align("left");
+		 * window.row().padBottom(10).padTop(10);
+		 * window.add(resetButton).align("left");
+		 */
 		window.row().padBottom(10).padTop(10);
 		window.add(checkBox).align("left");
 		window.row().padBottom(10).padTop(10);

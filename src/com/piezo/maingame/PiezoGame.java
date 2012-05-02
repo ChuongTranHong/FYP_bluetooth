@@ -32,7 +32,7 @@ public class PiezoGame implements ApplicationListener{
 			music = Gdx.audio.newMusic(Gdx.files.internal(Config.asString("backGroundMusic")));
 			music.setVolume(0.5f);
 			music.setLooping(true);
-//			music.play();
+			music.play();
 			setScreen(new MainMenu(this));
 
 		}
