@@ -122,7 +122,7 @@ public class RunningScreen extends GameScreen {
 		});
 
 		ui.addActor(menuButton);
-		if (Setting.androidMode) {
+		if (Setting.androidMode && Setting.inputType == Setting.PIEZO) {
 			game.mainApplication.runOnUiThread(new Runnable() {
 
 				@Override
@@ -166,7 +166,7 @@ public class RunningScreen extends GameScreen {
 			voltageDiagram = new VoltageDiagram(0, 0, screenWidth, screenHeight);
 		else if (Setting.debug && Setting.inputType == Setting.PIEZO)
 			voltageDiagram.reset();
-		if (Setting.androidMode) {
+		if (Setting.androidMode &&Setting.inputType == Setting.PIEZO) {
 			game.mainApplication.runOnUiThread(new Runnable() {
 
 				@Override
@@ -338,13 +338,28 @@ public class RunningScreen extends GameScreen {
 
 	public void hide() {
 		// TODO Auto-generated method stub
+		if (Setting.androidMode && Setting.inputType == Setting.PIEZO) {
+			game.mainApplication.runOnUiThread(new Runnable() {
 
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					abortAllThreads();
+					try {
+						joinAllThreads();
+					} catch (InterruptedException e) {
+					}
+				}
+			});
+
+			System.out.println("end on Pause");
+		}
 	}
 
 	public void pause() {
 		// TODO Auto-generated method stub
 
-		if (Setting.androidMode) {
+		if (Setting.androidMode && Setting.inputType == Setting.PIEZO) {
 			game.mainApplication.runOnUiThread(new Runnable() {
 
 				@Override
@@ -366,7 +381,7 @@ public class RunningScreen extends GameScreen {
 		// TODO Auto-generated method stub
 
 		System.out.println("ioio thread start11 ");
-		if (Setting.androidMode) {
+		if (Setting.androidMode && Setting.inputType == Setting.PIEZO) {
 			game.mainApplication.runOnUiThread(new Runnable() {
 
 				@Override
@@ -382,7 +397,7 @@ public class RunningScreen extends GameScreen {
 
 	public void dispose() {
 		// TODO Auto-generated method stub
-		if (Setting.androidMode) {
+		if (Setting.androidMode && Setting.inputType == Setting.PIEZO) {
 
 			game.mainApplication.runOnUiThread(new Runnable() {
 
